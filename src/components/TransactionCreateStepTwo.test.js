@@ -10,6 +10,7 @@ import TransactionCreateStepTwo from "./TransactionCreateStepTwo";
  * * Assert: you chheck if the features of your component match certain conditions
  */
 
+// UNIT TESTS
 // Test conditional rendering
 test("on initial render the pay button is disabled", async () => {
   /*
@@ -30,6 +31,20 @@ test("if an amount and note is entered, the pay putton becomes enabled", async (
    * NOTE: not having a label or role is bad practice
    */
   render(<TransactionCreateStepTwo sender={{ id: "4" }} receiver={{ id: "5" }} />);
+
+  userEvent.type(screen.getByPlaceholderText(/amount/i), "50");
+  userEvent.type(screen.getByPlaceholderText(/add a note/i), "dinner");
+
+  expect(await screen.findByRole("button", { name: /pay/i })).toBeEnabled();
+});
+
+// INTEGRATION TESTS
+// This test combines the two previous unit tests. However, integration tests is not about combining unit tests, it's about checking if the components of the app works in tune with each other
+// Usually it's better to combine unit tests in such a way that they resamble the user behavior and how the user uses the app.
+test("if an amount and note is entered, the pay putton becomes enabled (integration test)", async () => {
+  render(<TransactionCreateStepTwo sender={{ id: "4" }} receiver={{ id: "5" }} />);
+
+  expect(await screen.findByRole("button", { name: /pay/i })).toBeDisabled();
 
   userEvent.type(screen.getByPlaceholderText(/amount/i), "50");
   userEvent.type(screen.getByPlaceholderText(/add a note/i), "dinner");
